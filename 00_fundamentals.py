@@ -131,7 +131,40 @@ maximum = torch.max(x)
 mean = torch.mean(x.type(torch.float32)) # Requires a datatype of float32
 median = torch.median(x) 
 
+# Find the positional min and max 
 min_index = torch.argmin(x) 
 max_index = torch.argmax(x)
 
-print(max_index)
+"""
+Reshaping, Stacking, squeezing and unsqueezing tensors 
+
+*Reshaping - reshapes an input tensor to a defined shape
+* View - Return a view of an input tensor of certain shape but kep the same memory
+as the original tensor 
+* Stacking - combine multiple tensors on top of each other (vstack ) or 
+side by side hstack
+* Squeeze - removes all `1` dimensions from a tensor
+* Unsqueeze - add a `1` dimension to a target tensor 
+* Permute - Return a view of input with dimensions permuted (swapped) in a certain way
+"""
+x = torch.arange(1., 10.)  
+
+# Ad an extra dimension 
+x_reshaped = torch.reshape(x, shape=(1,9))  
+
+# Change the view 
+#z = x.view(1, 9) # Changing z changes x because a view shares the same memory as the original
+
+# Stack tensors on top of each other 
+x_stacked = torch.stack([x, x, x, x], dim=0) 
+
+# Squeeze  - 
+x_squeezed = x_reshaped.squeeze() 
+
+# Unsqueeze 
+unsqueezed = x_squeezed.unsqueeze(dim=0)
+
+# torch.permute - rearrange the dimensions of a target tensor 
+x_original = torch.rand(size=(224, 224, 3)) # [height, width, color channels]
+x_permuted = x_original.permute(2, 0, 1) 
+print(x_permuted.shape)
