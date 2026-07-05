@@ -91,4 +91,47 @@ tensor_by_ten = tensor * 20
 
 # Built-in functions 
 tensor_by_ten = torch.mul(tensor, 30)
-print(tensor_by_ten)
+
+"""
+Tensor Multiplication  
+1. Element-wise multiplication
+2. Matrix multiplication (dot product)
+"""
+# Element-wise 
+tensor = torch.tensor([1, 2, 3]) 
+tensor_by_tensor = tensor * tensor  
+
+""" Matrix multiplication   
+1. Inner dimensions must match 
+2. The resulting matrix takes the shape of the outer dimensions 
+
+Use torch.matmul or torch.mm"""
+matmul_tensor = torch.matmul(torch.rand(7, 3), torch.rand(3 ,4))  
+
+# Shapes for matrix multiplication 
+tensor_A = torch.tensor([ [1, 2], 
+                         [3, 4], 
+                         [5, 6]
+]) 
+tensor_B = torch.tensor([ [7, 10], 
+                         [8, 11], 
+                         [9, 12]
+])  
+
+# To fix our shape issue, we can manipulate the shape of our tensors
+transposed = tensor_B.T
+product = torch.mm(tensor_A, transposed)  
+
+"""
+Finding the min, max, mean, sum, etc (tensor aggregation)
+"""
+x = torch.arange(start=0, end=100, step=10)  
+minimum = torch.min(x)  
+maximum = torch.max(x) 
+mean = torch.mean(x.type(torch.float32)) # Requires a datatype of float32
+median = torch.median(x) 
+
+min_index = torch.argmin(x) 
+max_index = torch.argmax(x)
+
+print(max_index)
