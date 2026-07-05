@@ -51,4 +51,44 @@ range_tensor = torch.arange(1, 10, 2)
 # Tensors Like 
 one_to_ten = torch.tensor([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]) 
 ten_zeros = torch.zeros_like(one_to_ten) 
-print(ten_zeros)
+
+
+"""TENSOR DATATYPES 
+float32 is the default datatype of pytorch tensors
+
+Datatypes have to do with the precision with which it is stored 
+in memory
+""" 
+float_32_tensor = torch.tensor([1.0, 2.0, 3.0],
+                                dtype=torch.float, # type of data
+                                device="cpu", # device the tensor is on
+                             requires_grad=False) # Whether to track gradients 
+float_16_tensor = float_32_tensor.type(torch.float16)
+
+"""Most common errors in PyTorch and Deep Learning
+1. Tensors not the right datatype
+2. Tensors not on right device
+3. Tensors not the right shape
+"""
+
+""" 
+Manipulation Tensors (Tensor Operations) 
+* Addition
+* Subtraction 
+* Multiplication (element-wise)
+* Division
+* Matrix Multiplication
+""" 
+# Addition 
+tensor = torch.tensor([1, 2, 3]) 
+tensor_plus_ten = tensor + 10  
+
+# Subtraction
+tensor_minus_ten = tensor - 10
+
+# multiplication 
+tensor_by_ten = tensor * 20
+
+# Built-in functions 
+tensor_by_ten = torch.mul(tensor, 30)
+print(tensor_by_ten)
