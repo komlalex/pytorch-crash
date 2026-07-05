@@ -167,4 +167,57 @@ unsqueezed = x_squeezed.unsqueeze(dim=0)
 # torch.permute - rearrange the dimensions of a target tensor 
 x_original = torch.rand(size=(224, 224, 3)) # [height, width, color channels]
 x_permuted = x_original.permute(2, 0, 1) 
-print(x_permuted.shape)
+
+
+"""INDEXING 
+Selecting data from tensors. Indexing in PyTorch is similar to indexing 
+in NumPy
+"""  
+x = torch.arange(1, 10).reshape(1,3,3) 
+# Let's index on our new tensor 
+indexed = x[0][2][2] 
+
+# You can also use semi-colons to select "all" of a target dimension
+# Get all values of 0th and 1st dimensions but only index 1 of 2nd dimension
+indexed = x[:,:,1] 
+# Get all values of the 0th dimension but only the 1 index value of 1st and 2nd
+# dimension
+indexed = x[:,1, 1] 
+# Get  index 0 of 0th and 1st dimension and all values of 2nd dimension
+indexed = x[0, 0, :]
+# Index on x to return 9 
+indexed = x[0,2, 2] 
+# Index on x to return 3, 6, 9 
+indexed = x[:,:, 2]
+
+"""PyTorch tensors & NumPy  
+NumPy is a popular scientific Python numerical computing library. 
+Because of this, PyTorch has functionality to interact with it.
+ """
+# Data in NumPy -> PyTorch tensor 
+array = np.arange(1.0, 8.0) 
+tensor = torch.from_numpy(array).type(torch.float32) # Default NumPy dtype is float64 unless specified otherwise
+
+# Change the value of array, what happens to the tensor 
+array = array + 1 # Tensor is not affected
+
+# PyTorch Tensor  -> NumPy array 
+tensor = torch.ones(7) 
+array = tensor.numpy()
+
+
+""" REPRODUCIBILITY (Taking the random out of random) 
+To reduce the randomness in neural networs and PyTorch comes the concept of 
+random seed. Essentially what the random seed does is 'flavour' the randomness
+"""
+random_A = torch.rand(3, 4) 
+random_B = torch.rand(3,4) 
+#print(random_A == random_B) # All False 
+
+# Set the random seed 
+RANDOM_SEED = 42 
+torch.manual_seed(RANDOM_SEED) 
+random_C = torch.rand(3, 4)
+torch.manual_seed(RANDOM_SEED) 
+random_D = torch.rand(3, 4) 
+print(random_C == random_D) # All True
