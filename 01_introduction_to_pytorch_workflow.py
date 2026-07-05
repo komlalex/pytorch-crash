@@ -1,8 +1,3 @@
-import torch 
-import numpy as np 
-import pandas as pd 
-import matplotlib.pyplot as plt   
-
 """PyTorch Workflow
 Let's explore PyTorch end-to-end workflow 
 1. Prepare and Load Data 
@@ -12,3 +7,53 @@ Let's explore PyTorch end-to-end workflow
 5. Save and Load the model 
 6. Putting it all together 
 """
+import torch 
+from torch import nn # nn contains all of   PyTorch's building blocks for neural networks
+import numpy as np 
+import pandas as pd 
+import matplotlib.pyplot as plt   
+
+# Check PyTorch version 
+#print(torch.__version__)  
+
+"""
+1. Data (Preparing and Loading)  
+Data can be almost anything... in machine learning. 
+* Excel spreadsheet 
+* Images of any kind 
+* Videos
+* Audio like songs 
+* DNA 
+* Text 
+
+Machine learning is a game of two parts 
+1. Get data into a numerical representation 
+2. Build a model to learn patterns in the numerical representation 
+
+Let's showcase this with some "known" data using the linear regression fomula.
+
+We'll use a linear regression formula to make a straight line with known parameters
+"""
+# Create "known" parametwers 
+weight = 0.7 
+bias = 0.3 
+
+# Create data 
+start = 0 
+end = 1 
+step = 0.02 
+
+X = torch.arange(start, end, step).unsqueeze(dim=1)
+y = weight * X + bias 
+
+"""Splitting data into training and test sets 
+This is one of the most important concepts in machine learning
+""" 
+
+# Create a train test split 
+train_split = int(0.8 * len(X)) 
+X_train, y_train = X[:train_split], y[:train_split] 
+X_test, y_test = X[train_split:], y[train_split:] 
+
+
+
