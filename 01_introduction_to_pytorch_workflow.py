@@ -79,4 +79,121 @@ def plot_predictions(train_data=X_train,
 
     plt.show()
     
-plot_predictions()
+#plot_predictions()  
+
+"""BUILDING THE PYTORCH MODEL 
+
+The model adjusts the weights and biases through two main algorithms: 
+1. Gradient descent 
+2. Back propagation 
+"""  
+
+# Create a linear regression model class 
+
+class LinearRegressionModel(nn.Module): 
+    def __init__(self):
+        super().__init__() 
+        # Initialize model parameters
+        self.weight = nn.Parameter(torch.randn(1, 
+                                                requires_grad=True, 
+                                                dtype=torch.float)) 
+        self.bias = nn.Parameter(torch.randn(1, 
+                                             requires_grad=True, 
+                                             dtype=torch.float)) 
+        
+    # Forward  method to define the computation in the the model 
+    def forward(self, x:torch.Tensor) -> torch.Tensor: # x is the input data
+        return self.weight * x + self.bias # Linear regression formula
+    
+# Create random see 
+RANDOM_SEED = 42 
+torch.manual_seed(RANDOM_SEED) 
+
+# Create an instance of the model 
+model_0 = LinearRegressionModel()  
+
+# Check parameters 
+params = list(model_0.parameters()) 
+
+# List named parameters 
+named_params = model_0.state_dict() 
+
+
+#Make predictions with our random model  
+with torch.inference_mode(): # Context manager for making predictions
+    y_preds = model_0(X_test) 
+    #plot_predictions(predictions=y_preds)  
+
+# Alternatively. However torch.inference_mode() is more preferred   
+""""
+with torch.no_grad():
+    y_preds = model_0(X_test) 
+    plot_predictions(predictions=y_preds) 
+"""
+
+""" Train model 
+Note: Loss function may also be called a criterion or cost function 
+Loss function: A function to measure how wrong the model's predictions are compared to the ideal model
+Optimizer: takes into account the loss of a model and adjusts the model's parameters (e.g. weight & bias)
+to improve the loss function 
+
+Specifically we need: 
+1. Training loop
+2. Testing loop 
+""" 
+# Setup a loss function 
+loss_fn = nn.L1Loss() 
+# Setup an optimizer  
+optimizer = torch.optim.SGD(params=model_0.parameters(), 
+                            lr=0.01) # lr is a hyperparameter that defines how big/small the optimizer changes the parameters
+
+""" Building the training and a testing loop   
+1. Loop through the data 
+2. FOrward pass (this involves moving data through our model's forward function to make 
+predictions on the data - also called forward propagation)
+3. Calculate the loss (compare forward pass predictions to ground truth labels)
+4. Optimizer zero grad 
+5. Loss backward - move backwards through the network to calculate the gradients 
+of each of the parameters of our model with respect to the loss (backpropagation)
+6. Optimizer step - Use the optimizer to adjust our model's parameters to try
+improve the loss
+""" 
+# An epoch is one loop through the data  
+torch.manual_seed(42)
+epochs = 200
+
+# Loop through the data 
+for epoch in range(epochs): 
+    # Set model to training mode 
+    model_0.train() # Sets all parameters that require gradient to 'True' 
+
+    # 1. forward pass  
+    y_pred = model_0(X_train)
+
+    # 2. Calculate the loss 
+    loss = loss_fn(y_pred, y_train)  
+
+    # 3. Optimizer zero grad 
+    optimizer.zero_grad()
+    # 4. Perform back propagation on the loss with respect to the parameters of the model 
+    loss.backward()
+    # 5. Step the optimizer (perform gradient descent)  
+    optimizer.step() 
+
+
+    """Testing""" 
+    model_0.eval() # turns off different settings in the model not needed for evaluation (dropout, batch norm layers) 
+    with torch.inference_mode(): # Turns off gradient tracking  
+        # 1. Forward pass  
+        test_pred = model_0(X_test)
+        # Calculate the loss 
+        test_loss = loss_fn(test_pred, y_test)
+
+        if epoch % 10 == 0:
+            print(f"Epoch: {epoch} | Loss: {loss} | Test Loss: {test_loss}")
+            print(model_0.state_dict()) 
+        if epoch == 199:  
+            y_pred =model_0(X_test)
+            plot_predictions(predictions=y_pred)  
+  
+
