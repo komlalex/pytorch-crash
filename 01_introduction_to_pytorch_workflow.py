@@ -160,7 +160,12 @@ improve the loss
 """ 
 # An epoch is one loop through the data  
 torch.manual_seed(42)
-epochs = 200
+epochs = 200 
+
+# Track different values
+epoch_count = [] 
+train_loss_values = [] 
+test_loss_values = []
 
 # Loop through the data 
 for epoch in range(epochs): 
@@ -190,10 +195,24 @@ for epoch in range(epochs):
         test_loss = loss_fn(test_pred, y_test)
 
         if epoch % 10 == 0:
+            epoch_count.append(epoch) 
+            train_loss_values.append(loss) 
+            test_loss_values.append(test_loss)
             print(f"Epoch: {epoch} | Loss: {loss} | Test Loss: {test_loss}")
             print(model_0.state_dict()) 
-        if epoch == 199:  
+
+        # Plot predictions after the last epoch
+        if epoch == epochs - 1:  
+            print(epoch)
             y_pred =model_0(X_test)
             plot_predictions(predictions=y_pred)  
   
 
+# Plot loss curves  
+plt.plot(epoch_count, np.array(torch.tensor(train_loss_values).numpy()), label="Train loss") 
+plt.plot(epoch_count, np.array(torch.tensor(test_loss_values).numpy()), label="Test loss")  
+plt.title("Training and test loss curves") 
+plt.ylabel("Loss") 
+plt.xlabel("Epoch") 
+plt.legend()
+plt.show()
