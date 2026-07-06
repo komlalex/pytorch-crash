@@ -205,7 +205,7 @@ for epoch in range(epochs):
         if epoch == epochs - 1:  
             print(epoch)
             y_pred =model_0(X_test)
-            plot_predictions(predictions=y_pred)  
+            #plot_predictions(predictions=y_pred)  
   
 
 # Plot loss curves  
@@ -215,4 +215,44 @@ plt.title("Training and test loss curves")
 plt.ylabel("Loss") 
 plt.xlabel("Epoch") 
 plt.legend()
-plt.show()
+#plt.show() 
+
+"""Saving a model in PyTorch  
+There are three main methods for saving and loading in PyTorch
+1. torch.save() 
+2. torch.load()
+3. torch.nn.Module.load_state_dict()
+""" 
+# Save the model 
+from pathlib import Path 
+MODEL_PATH = Path("models") 
+MODEL_PATH.mkdir(parents=True, exist_ok=True) 
+
+# Model save path 
+MODEL_NAME = "01_pytorch_model.pth"  
+MODEL_SAVE_PATH = MODEL_PATH / MODEL_NAME 
+
+# Save the model state dict 
+torch.save(obj=model_0.state_dict(), 
+           f=MODEL_SAVE_PATH) 
+
+# Load the saved model  
+# Since we saved our model's state dict we create a new instance of the model and load the saved state dict
+loaded_model_0 = LinearRegressionModel()   
+
+
+# Load the saved state dict of model_0 
+loaded_model_0.load_state_dict(torch.load(f=MODEL_SAVE_PATH, weights_only=True)) 
+
+
+# Make some predictions with our loaded model 
+loaded_model_0.eval() 
+with torch.inference_mode(): 
+    # original model
+    model_0_preds = model_0(X_test)
+    # loaded model 
+    loaded_model_preds = loaded_model_0(X_test)  
+    # Compare model preds with original model 
+    print(loaded_model_preds == model_0_preds) # All True
+
+
