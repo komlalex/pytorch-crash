@@ -102,5 +102,5 @@ loaded_model_1.to(device)
 loaded_model_1.load_state_dict(torch.load(f=MODEL_SAVE_PATH, 
                                           weights_only=True)) 
 
-print(loaded_model_1.state_dict() == model_1.state_dict())
+print(loaded_model_1.state_dict() == model_1.state_dict()) 
 
