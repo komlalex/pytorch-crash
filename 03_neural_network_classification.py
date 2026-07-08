@@ -72,8 +72,11 @@ model_0 = CircleModelV1().to(device)
  
 # Let's replicate using nn.Sequential 
 model_0 = nn.Sequential(
-    nn.Linear(in_features=2, out_features=5), 
-    nn.Linear(in_features=5, out_features=1), 
+    nn.Linear(in_features=2, out_features=256),  
+    nn.ReLU(),  
+    nn.Linear(in_features=256, out_features=128),  
+    nn.ReLU(),
+    nn.Linear(in_features=128, out_features=1), 
 ).to(device)
 
 # Make some predictions with the model 
@@ -88,8 +91,8 @@ For classification you might want binary cross entropy or categorical cross entr
 Two of the most common optimizers are SGD and Adam
 """
 loss_fn = nn.BCEWithLogitsLoss() # Sigmoid activation function built in
-optimizer = torch.optim.SGD(params=model_0.parameters(), 
-                            lr=0.1) 
+optimizer = torch.optim.Adam(params=model_0.parameters(), 
+                            lr=0.01) 
 
 # Let's calculate accuracy - out of 100 examples, what percentage does our model get right
 def accuracy(y_true, y_preds):
@@ -154,4 +157,20 @@ plot_decision_boundary(model_0, x_train, y_train)
 plt.subplot(1, 2, 2) 
 plt.title("Test")
 plot_decision_boundary(model_0, x_test, y_test) 
-plt.show()
+plt.show() 
+
+"""Improving a model (Model perspective)
+* Add more layers - give the more more chance to learn aboput patterns in the data
+* Add more hidden units - For example go from 5 hidden units to 10 hiden units 
+* Fit for longer 
+* Changing/adding activation functions
+* Change optimizer
+* Change the learning rate   
+* Change the loss function  
+
+These options are all from a model perspective because they deal directly with 
+the model, rather than the data. 
+
+Because these options are all values we can change, they are referred to as hyperparameters
+
+"""
