@@ -98,7 +98,7 @@ def accuracy(y_true, y_preds):
     return acc  
 
 # Train the model 
-epochs = 100
+epochs = 1000
 
 for epoch in range(epochs): 
     model_0.train() 
@@ -144,4 +144,14 @@ else:
     with open("helper_functions.py", "wb") as f:
          f.write(request.content) 
 
-#from helper_functions import plot_predictions, plot_decision_boundary
+from helper_functions import plot_predictions, plot_decision_boundary  
+
+# Plot decision boundary of the model 
+plt.figure(figsize=(12, 6)) 
+plt.subplot(1, 2, 1)  
+plt.title("Train") 
+plot_decision_boundary(model_0, x_train, y_train) 
+plt.subplot(1, 2, 2) 
+plt.title("Test")
+plot_decision_boundary(model_0, x_test, y_test) 
+plt.show()
