@@ -29,13 +29,15 @@ X_blob, y_blob = make_blobs(n_samples=1000,  # type: ignore
 blobs = DataFrame({"x": X_blob[:, 0], "y": X_blob[:,1], "label": y_blob}) 
 #print(blobs.label.value_counts()) 
 
+""""
 plt.scatter(x=X_blob[:,0], 
             y=X_blob[:,1], 
             c=y_blob, 
             cmap="RdYlBu") 
+"""
 #plt.show() 
-X_blob = torch.from_numpy(X_blob).type(torch.float).to(device) 
-y_blob = torch.from_numpy(y_blob).type(torch.LongTensor).to(device)  # type: ignore
+X_blob = torch.from_numpy(X_blob).type(torch.float).to(device)
+y_blob = torch.from_numpy(y_blob).type(torch.long).to(device) # type: ignore
 
 x_train, x_test, y_train, y_test = train_test_split(X_blob, y_blob, 
                                                     random_state=RANDOM_SEED, 
@@ -76,7 +78,7 @@ optimizer = torch.optim.Adam(params=model_0.parameters(),
                              lr=0.01) 
 loss_fn = torch.nn.CrossEntropyLoss() 
 
-EPOCHS = 100
+EPOCHS = 1000
 
 
 for epoch in range(EPOCHS): 
@@ -104,4 +106,42 @@ for epoch in range(EPOCHS):
         print(f"Epoch: {epoch} | Loss: {loss:.5f} | Acc: {acc:.2f}% | Test Loss: {test_loss:.5f} Test Acc: {test_acc:.2f}%")
 
 
+# Plot decision boundary 
+from helper_functions import plot_decision_boundary  
+import copy 
+copied_model_0 = copy.deepcopy(model_0) 
+plt.figure(figsize=(10,7)) 
+plt.subplot(1, 2, 1)
+plt.title("Train") 
+plot_decision_boundary(model=copied_model_0, X=x_train, y=y_train) 
+plt.subplot(1, 2, 2)
+plt.title("Test")
+plot_decision_boundary(model=copied_model_0, X=x_test, y=y_test) 
+#plt.show() 
 
+# Making and evaluating predictions  
+
+model_0.eval() 
+with torch.inference_mode():  
+    test_logits = model_0(x_test.to(device)) 
+    y_preds = torch.softmax(test_logits, dim=1).argmax(dim=1) 
+
+    # View the first 10 preds 
+    #print(y_preds[:10] == y_test[:10]) 
+
+"""
+More Classification metrics   
+* Accuracy 
+* Precision 
+* Recall 
+* F1 Score 
+* Confusion metrics 
+* Classification report 
+""" 
+
+from torchmetrics import Accuracy 
+
+# Setup metric 
+tm_accuracy = Accuracy(task="multiclass", num_classes=4).to(device)
+tm_acc = tm_accuracy(y_preds, y_test).item()
+print(f"Torchmetrics Acc: {tm_acc * 100:.2f}%")
