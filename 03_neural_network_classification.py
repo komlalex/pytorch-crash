@@ -33,13 +33,14 @@ circles = pd.DataFrame({"x1": x[:, 0], "x2": x[:, 1], "label": y})
 #print(circles.label.value_counts())
 
 # Visualize 
+"""
 plt.scatter(x=x[:,0], 
             y=x[:,1], 
             c=y, 
             cmap= mpl.colormaps["RdYlBu"]
             )  
-#plt.show() 
-
+plt.show() 
+"""
 """The data we are working with is is a toy dataset
 because it is small enough to experiment but still sizeable enough to practice the 
 fundamentals
@@ -101,7 +102,7 @@ def accuracy(y_true, y_preds):
     return acc  
 
 # Train the model 
-epochs = 1000
+epochs = 2000
 
 for epoch in range(epochs): 
     model_0.train() 
@@ -127,7 +128,7 @@ for epoch in range(epochs):
                        y_preds=test_preds)   
         
         # Print out what's happening
-        if epoch % 10 ==0: 
+        if epoch % 10 ==0 or epoch == epochs -1: 
             pass
             print(f"Epoch: {epoch} | Loss: {loss:.5f}, Acc: {train_acc:.2f}% | Test Loss: {test_loss:.5f}, Test Acc: {test_acc:.2f}%")
 
@@ -172,5 +173,12 @@ These options are all from a model perspective because they deal directly with
 the model, rather than the data. 
 
 Because these options are all values we can change, they are referred to as hyperparameters
+In this specific case, I did the following 
+* Added more layers: 2 linear layers -> 3 linear layers
+* Added more hidden units: 10 -> 256
+* Changed the optimizer: SGD -> Adam 
+* Trained for longer: 100 -> 1000 epochs 
 
+With this, the model achieved 100% accuracy on both the training and testing 
+datasets.
 """
